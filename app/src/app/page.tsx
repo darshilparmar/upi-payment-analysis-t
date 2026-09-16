@@ -10,7 +10,7 @@ import { Icon, type IconName } from '@/components/icons';
 const HERO_APPS = ['PhonePe', 'Google Pay', 'Paytm', 'BHIM'];
 
 export default function Shop() {
-  const { products, loading, query, setQuery, openDrawer, count } = useShop();
+  const { products, loading, error, query, setQuery, openDrawer, count } = useShop();
   const [cat, setCat] = useState<string>('All');
   const [sort, setSort] = useState<'popular' | 'low' | 'high'>('popular');
 
@@ -112,6 +112,23 @@ export default function Shop() {
 
         {loading ? (
           <div className="grid">{Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}</div>
+        ) : error ? (
+          <div className="empty">
+            <div className="empty-art fail"><Icon.alert size={36} strokeWidth={1.5} /></div>
+            <h3>Couldn&apos;t load the catalogue</h3>
+            <p className="muted">The shop&apos;s database didn&apos;t answer.</p>
+            <pre className="err-detail">{error}</pre>
+            <p className="muted small">
+              On Vercel: add <code>DATABASE_URL</code> under Settings → Environment Variables (all environments), redeploy,
+              and make sure <code>npm run db:setup</code> has been run against that same Neon database.
+            </p>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="empty">
+            <div className="empty-art"><Icon.box size={36} strokeWidth={1.5} /></div>
+            <h3>The catalogue is empty</h3>
+            <p className="muted">The database is reachable but has no products. Run <code>npm run db:setup</code> against it.</p>
+          </div>
         ) : visible.length === 0 ? (
           <div className="empty">
             <div className="empty-art"><Icon.search size={36} strokeWidth={1.5} /></div>

@@ -11,10 +11,14 @@ export const dynamic = 'force-dynamic';
 const DEMO_USER_ID = 1;
 
 export async function GET() {
-  const rows = (await sql`
-    SELECT user_id, name, vpa, phone, city, kyc_level
-    FROM users WHERE user_id = ${DEMO_USER_ID} AND NOT is_deleted
-  `) as any[];
-  if (!rows.length) return NextResponse.json({ error: 'no demo user — run npm run db:setup' }, { status: 404 });
-  return NextResponse.json(rows[0]);
+  try {
+    const rows = (await sql`
+      SELECT user_id, name, vpa, phone, city, kyc_level
+      FROM users WHERE user_id = ${DEMO_USER_ID} AND NOT is_deleted
+    `) as any[];
+    if (!rows.length) return NextResponse.json({ error: 'no demo user — run npm run db:setup' }, { status: 404 });
+    return NextResponse.json(rows[0]);
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message ?? String(err) }, { status: 500 });
+  }
 }

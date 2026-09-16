@@ -10,6 +10,7 @@ type Cart = Record<number, number>;
 type Shop = {
   products: Product[];
   loading: boolean;
+  error: string | null;
   me: Me | null;
   cart: Cart;
   count: number;
@@ -33,6 +34,7 @@ const CART_KEY = 'upishop_cart';
 export function ShopProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [me, setMe] = useState<Me | null>(null);
   const [cart, setCart] = useState<Cart>({});
   const [hydrated, setHydrated] = useState(false);
@@ -42,8 +44,16 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
-    fetch('/api/products').then((r) => r.json()).then((rows) => { setProducts(rows); setLoading(false); })
-      .catch(() => setLoading(false));
+    fetch('/api/products')
+      .then(async (r) => {
+        const body = await r.json().catch(() => null);
+        if (!r.ok || !Array.isArray(body)) {
+          throw new Error(body?.error ?? `${r.status} ${r.statusText}`);
+        }
+        setProducts(body);
+      })
+      .catch((e) => setError(e.message ?? 'Could not load the catalogue'))
+      .finally(() => setLoading(false));
     fetch('/api/me').then((r) => (r.ok ? r.json() : null)).then(setMe).catch(() => {});
     try {
       const raw = localStorage.getItem(CART_KEY);
@@ -87,7 +97,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   const subtotal = useMemo(() => lines.reduce((s, l) => s + Number(l.product.price_inr) * l.qty, 0), [lines]);
 
   const value: Shop = {
-    products, loading, me, cart, count, subtotal, lines,
+    products, loading, error, me, cart, count, subtotal, lines,
     add, setQty, remove, clear,
     drawerOpen, openDrawer: () => setDrawerOpen(true), closeDrawer: () => setDrawerOpen(false),
     query, setQuery, toast,

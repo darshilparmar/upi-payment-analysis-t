@@ -297,6 +297,13 @@ code { font-family: var(--mono); font-size: .86em; background: var(--surface-2);
 .empty-art { width: 84px; height: 84px; border-radius: 50%; background: var(--brand-50); color: var(--brand); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
 .empty h2, .empty h3 { font-size: 20px; margin-bottom: 6px; }
 .empty .btn { margin-top: 18px; }
+.empty-art.fail { background: var(--fail-50); color: var(--fail); }
+.empty .small { font-size: 13px; max-width: 520px; margin: 12px auto 0; }
+.err-detail {
+  display: inline-block; text-align: left; margin: 14px auto 0; padding: 10px 14px; max-width: 640px;
+  background: var(--fail-50); color: #991b1b; border: 1px solid var(--fail-100); border-radius: 10px;
+  font-family: var(--mono); font-size: 12.5px; white-space: pre-wrap; word-break: break-word;
+}
 
 /* --- how it works ------------------------------------------------------- */
 .how { margin-top: 56px; padding: 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
