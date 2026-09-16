@@ -15,8 +15,13 @@ function connectionString(): string {
  *
  * Resolved lazily so `next build` doesn't need a database.
  */
+//
+// `cache: 'no-store'` matters: the HTTP driver talks to Neon with fetch(), and
+// Next.js patches fetch inside route handlers to memoise identical requests.
+// Without it a status poll can keep returning the first (PENDING) answer
+// long after the bank has settled the row.
 export const sql: ReturnType<typeof neon> = ((strings: TemplateStringsArray, ...values: unknown[]) =>
-  neon(connectionString())(strings, ...values)) as ReturnType<typeof neon>;
+  neon(connectionString(), { fetchOptions: { cache: 'no-store' } })(strings, ...values)) as ReturnType<typeof neon>;
 
 export async function withTransaction<T>(fn: (client: any) => Promise<T>): Promise<T> {
   const pool = new Pool({ connectionString: connectionString() });

@@ -1,0 +1,28 @@
+# Drives the shop's bank simulator on the deployed app.
+#
+# Vercel's Hobby plan only allows daily crons, so this schedule is what settles
+# PENDING payments nobody is watching and produces the delayed REVERSALs the
+# CDC and reconciliation modules depend on.
+#
+# Setup: Settings → Secrets and variables → Actions → Variables → SHOP_URL,
+# e.g. https://upi-shop.vercel.app  (no trailing slash)
+#
+# Note: GitHub pauses scheduled workflows after 60 days with no repo activity —
+# re-enable it from the Actions tab if the shop goes quiet.
+name: simulate-bank
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    if: ${{ vars.SHOP_URL != '' }}
+    steps:
+      - name: Settle pending payments, reverse a few
+        run: |
+          curl --fail --silent --show-error --max-time 60 "$SHOP_URL/api/simulate"
+        env:
+          SHOP_URL: ${{ vars.SHOP_URL }}

@@ -430,7 +430,7 @@ code { font-family: var(--mono); font-size: .86em; background: var(--surface-2);
 @media (max-width: 480px) { .details { grid-template-columns: 1fr; gap: 2px 0; } .details dt { font-size: 12px; margin-top: 8px; } }
 
 .timeline { position: relative; padding-left: 4px; }
-.timeline li { position: relative; display: flex; gap: 14px; padding: 0 0 20px 22px; align-items: flex-start; }
+.timeline li { color: var(--fg); position: relative; display: flex; gap: 14px; padding: 0 0 20px 22px; align-items: flex-start; }
 .timeline li::before { content: ''; position: absolute; left: 6px; top: 16px; bottom: -4px; width: 2px; background: var(--line); }
 .timeline li:last-child::before { display: none; }
 .timeline li:last-child { padding-bottom: 0; }

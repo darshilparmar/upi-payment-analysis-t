@@ -119,4 +119,10 @@ if (FRAUD) {
 
 const secs = ((Date.now() - started) / 1000).toFixed(1);
 console.log(`\n${sent} orders placed, ${failed} failed, in ${secs}s`);
-console.log('the simulator settles them within a minute — watch payments.status change');
+
+// Run the bank once so the batch settles now rather than at the next sweep.
+// Anything still too fresh (< 5 s) is left PENDING for the next /api/simulate.
+await sleep(5500);
+const sim = await fetch(`${URL_BASE}/api/simulate`).then((r) => r.json()).catch(() => null);
+if (sim) console.log(`simulator: ${sim.settled} settled, ${sim.reversed} reversed`);
+console.log('later sweeps (/api/simulate) will reverse a few of the successes — watch payments.status change');

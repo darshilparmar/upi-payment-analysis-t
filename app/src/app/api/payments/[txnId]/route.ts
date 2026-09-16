@@ -1,10 +1,18 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { settleOne } from '@/lib/simulator';
 
 export const dynamic = 'force-dynamic';
 
 /** GET /api/payments/UPI2026... — what the status page polls. */
 export async function GET(_req: Request, { params }: { params: { txnId: string } }) {
+  // The bank answers when the PSP asks. Settling here (instead of only on a
+  // cron) means the on-camera PENDING → SUCCESS flip works on a Vercel Hobby
+  // deploy, where crons may run at most once a day. No-op unless the payment
+  // is still PENDING and old enough; the UPDATE is guarded so a concurrent
+  // cron sweep can't double-settle it.
+  await settleOne(params.txnId);
+
   const rows = (await sql`
     SELECT p.txn_id, p.status, p.failure_reason, p.amount_inr, p.psp_app, p.payer_bank,
            p.payer_vpa, p.payee_vpa, p.initiated_at, p.settled_at, p.updated_at,

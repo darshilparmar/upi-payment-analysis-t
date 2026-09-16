@@ -70,7 +70,7 @@ export default function Shop() {
 
       <section className="perks">
         <div><Icon.bolt size={18} /><div><strong>Instant confirmation</strong><span>Live status from your bank</span></div></div>
-        <div><Icon.refresh size={18} /><div><strong>Auto-refunds</strong><span>Failed payments reversed automatically</span></div></div>
+        <div><Icon.refresh size={18} /><div><strong>Auto-refunds</strong><span>Failed payments refunded</span></div></div>
         <div><Icon.truck size={18} /><div><strong>Free delivery</strong><span>On orders above ₹499</span></div></div>
         <div><Icon.shield size={18} /><div><strong>No card needed</strong><span>Just your UPI PIN</span></div></div>
       </section>
