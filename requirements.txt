@@ -1,0 +1,26 @@
+# Local tooling for the generator, the loaders and the tests.
+# The Databricks notebooks run on the cluster's own runtime — nothing here is needed there.
+
+# generator
+numpy>=1.26
+pandas>=2.1
+pyyaml>=6.0
+
+# uploading to ADLS / reading Neon locally
+azure-storage-file-datalake>=12.14
+azure-identity>=1.16
+psycopg[binary]>=3.1
+
+# dbt on databricks (Module 10)
+dbt-databricks>=1.8
+
+# tests (Module 14)
+
+pytest>=8.0
+chispa>=0.10
+pyspark>=3.5
+
+# ai layer (Module 19) + dashboards
+streamlit>=1.35
+databricks-sql-connector>=3.1
+databricks-sdk>=0.29

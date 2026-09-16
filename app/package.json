@@ -1,0 +1,28 @@
+{
+  "name": "upi-shop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small shop that takes UPI payments. The OLTP source for the lakehouse.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:setup": "node scripts/setup-db.mjs",
+    "db:reset": "node scripts/setup-db.mjs --drop",
+    "load": "node scripts/load.mjs",
+    "alter": "node scripts/staged-alter.mjs"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.4",
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "typescript": "^5.5.3",
+    "dotenv": "^16.4.5",
+    "pg": "^8.12.0"
+  }
+}
